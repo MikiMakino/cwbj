@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CWBJ FAQ</title>
+  <style>
+
+    * { box-sizing: border-box; }
+    html, body { background: #ffffff; }
+    body {
+      margin: 0;
+      color: #111111;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #111111; }
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+    .masthead {
+      padding-bottom: 24px;
+      border-bottom: 1px solid #d9d9d9;
+    }
+    h1.title {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 38px);
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .tagline {
+      margin: 8px 0 0;
+      font-size: 15px;
+      color: #444444;
+    }
+    .lede {
+      margin: 14px 0 0;
+      max-width: 42em;
+      color: #555555;
+      font-size: 14px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #ffffff;
+      padding: 20px 0 16px;
+      border-bottom: 1px solid #eeeeee;
+    }
+    .search { position: relative; display: block; }
+    .search input {
+      width: 100%;
+      font: inherit;
+      font-size: 14px;
+      color: #111111;
+      background: #ffffff;
+      border: 1px solid #bdbdbd;
+      border-radius: 4px;
+      padding: 11px 12px 11px 38px;
+      outline: none;
+    }
+    .search input:focus-visible { border-color: #111111; outline: 1px solid #111111; }
+    .search input::placeholder { color: #777777; }
+    .search svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      stroke: #666666;
+      pointer-events: none;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .chip {
+      font: inherit;
+      font-size: 13px;
+      color: #333333;
+      background: #ffffff;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .chip:hover { border-color: #777777; }
+    .chip[aria-pressed="true"] {
+      color: #111111;
+      background: #f2f2f2;
+      border-color: #777777;
+      font-weight: 700;
+    }
+    .chip:focus-visible, summary:focus-visible, .cta:focus-visible {
+      outline: 2px solid #111111;
+      outline-offset: 2px;
+    }
+    .result-count {
+      margin: 10px 0 0;
+      font-size: 12px;
+      color: #666666;
+    }
+    .category-group { margin-top: 34px; }
+    .category-heading {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .category-heading .dot { display: none; }
+    .entry-list { border-top: 1px solid #cccccc; }
+    details.entry { border-bottom: 1px solid #dddddd; }
+    details.entry summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 2px;
+    }
+    details.entry summary::-webkit-details-marker { display: none; }
+    .q-mark {
+      flex: none;
+      width: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333333;
+      padding-top: 1px;
+    }
+    .q-text {
+      flex: 1;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .chevron {
+      flex: none;
+      width: 16px;
+      height: 16px;
+      margin-top: 4px;
+      stroke: #666666;
+      transition: transform 0.18s ease;
+    }
+    details.entry[open] .chevron { transform: rotate(180deg); }
+    .a-body {
+      display: flex;
+      gap: 12px;
+      padding: 0 2px 18px;
+    }
+    .a-mark {
+      flex: none;
+      width: 24px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333333;
+    }
+    .a-text {
+      flex: 1;
+      color: #444444;
+      font-size: 14px;
+      max-width: 44em;
+    }
+    .a-text p { margin: 0; }
+    mark { background: #eeeeee; color: #111111; padding: 0 0.1em; }
+    .entry.is-hidden, .category-group.is-hidden { display: none; }
+    .empty-state {
+      margin-top: 28px;
+      padding: 20px 0;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+      display: none;
+    }
+    .empty-state.is-visible { display: block; }
+    .cta-block {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #cccccc;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .cta-block h2 {
+      margin: 0 0 4px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .cta-block p { margin: 0; font-size: 13px; color: #555555; }
+    .cta {
+      font: inherit;
+      font-weight: 700;
+      font-size: 14px;
+      color: #ffffff;
+      background: #111111;
+      border: 1px solid #111111;
+      border-radius: 4px;
+      padding: 10px 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .fine-print {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #666666;
+    }
+    .fine-print a { color: #555555; }
+    @media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
+    @media (max-width: 520px) {
+      .page { padding: 32px 18px 48px; }
+      .toolbar { padding-top: 14px; }
+      .cta-block { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <h1 class="title">CWBJ FAQ</h1>
+    <p class="tagline">Code;Without Barriers in Japan｜よくある質問・相談</p>
+    <p class="lede">寄せられた質問と相談をまとめています。運営内で内容を確認し、公開に適したものだけを掲載しています。</p>
+  </header>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="searchInput" placeholder="キーワードで検索(例: 個人情報、削除、GitHub)" autocomplete="off">
+    </label>
+    <div class="chips" id="chipRow">
+      <button class="chip" type="button" data-category="all" aria-pressed="true">すべて</button>
+      <button class="chip" type="button" data-category="ask" aria-pressed="false">質問・相談について</button>
+      <button class="chip" type="button" data-category="privacy" aria-pressed="false">プライバシーについて</button>
+      <button class="chip" type="button" data-category="site" aria-pressed="false">このサイトについて</button>
+    </div>
+    <p class="result-count" id="resultCount">全7件</p>
+  </div>
+
+  <main id="results">
+
+    <section class="category-group" data-category="ask">
+      <h2 class="category-heading"><span class="dot"></span>質問・相談について</h2>
+      <div class="entry-list">
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">質問や相談をするのにGitHubアカウントは必要ですか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>いいえ、必要ありません。ページ下部の「質問・相談を送る」から専用フォームに入力するだけで、どなたでも匿名で送ることができます。GitHubは運営側の管理にのみ使用しています。</p></div>
+          </div>
+        </details>
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">回答までどのくらい時間がかかりますか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>内容にもよりますが、通常1〜2週間を目安にしています。混み合っている時期は前後することがあります。</p></div>
+          </div>
+        </details>
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">送った内容は必ずこのページに掲載されますか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>いいえ。運営内で内容を確認し、他の方の参考になると判断したものだけを掲載しています。個別のご事情に関わる内容は掲載しない場合があります。</p></div>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <section class="category-group" data-category="privacy">
+      <h2 class="category-heading"><span class="dot"></span>プライバシーについて</h2>
+      <div class="entry-list">
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">名前や連絡先はFAQに載りますか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>載りません。掲載前に運営側で個人が特定できる情報をすべて取り除いてから公開しています。</p></div>
+          </div>
+        </details>
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">一度載った回答を取り下げてほしい場合はどうすればいいですか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>フォームまたは直接のご連絡で取り下げのご希望をお伝えください。確認でき次第、該当項目を非公開にします。</p></div>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <section class="category-group" data-category="site">
+      <h2 class="category-heading"><span class="dot"></span>このサイトについて</h2>
+      <div class="entry-list">
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">過去の質問はまとめて見られますか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>公開済みの回答のみ、カテゴリごとに一覧で確認できます。上の検索欄からキーワードで探すこともできます。</p></div>
+          </div>
+        </details>
+
+        <details class="entry">
+          <summary>
+            <span class="q-mark">Q</span>
+            <span class="q-text">このFAQはどうやって更新されていますか？</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="a-body">
+            <span class="a-mark">A</span>
+            <div class="a-text"><p>いただいた質問と回答は運営内で管理し、公開が決まったものだけを自動的にこのページへ反映しています。</p></div>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <p class="empty-state" id="emptyState">該当する質問が見つかりませんでした。キーワードを変えて再度お試しください。</p>
+
+  </main>
+
+  <div class="cta-block">
+    <div>
+      <h2>探している答えが見つかりませんでしたか?</h2>
+      <p>質問・相談は匿名で送ることができます。個人情報は公開前にすべて取り除きます。</p>
+    </div>
+    <a class="cta" href="#">質問・相談を送る</a>
+  </div>
+
+  <p class="fine-print">最終更新: 2026年8月9日 ・ 全7件のうち公開中のものを表示しています ・ <a href="flow.html">運用フローを見る</a></p>
+
+</div>
+
+<script>
+  (function () {
+    var searchInput = document.getElementById("searchInput");
+    var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+    var groups = Array.prototype.slice.call(document.querySelectorAll(".category-group"));
+    var resultCount = document.getElementById("resultCount");
+    var emptyState = document.getElementById("emptyState");
+    var activeCategory = "all";
+
+    function clearMarks(el) {
+      el.querySelectorAll("mark").forEach(function (m) {
+        m.replaceWith(document.createTextNode(m.textContent));
+      });
+      el.normalize();
+    }
+
+    function highlight(el, query) {
+      if (!query) return;
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      var nodes = [];
+      var node;
+      while ((node = walker.nextNode())) nodes.push(node);
+      nodes.forEach(function (textNode) {
+        var text = textNode.textContent;
+        var idx = text.toLowerCase().indexOf(query);
+        if (idx === -1) return;
+        var span = document.createElement("span");
+        span.appendChild(document.createTextNode(text.slice(0, idx)));
+        var mark = document.createElement("mark");
+        mark.textContent = text.slice(idx, idx + query.length);
+        span.appendChild(mark);
+        span.appendChild(document.createTextNode(text.slice(idx + query.length)));
+        textNode.replaceWith(span);
+      });
+    }
+
+    function applyFilters() {
+      var query = searchInput.value.trim().toLowerCase();
+      var visibleCount = 0;
+
+      groups.forEach(function (group) {
+        var categoryMatches = activeCategory === "all" || group.dataset.category === activeCategory;
+        var groupHasVisible = false;
+
+        group.querySelectorAll(".entry").forEach(function (entry) {
+          var qEl = entry.querySelector(".q-text");
+          var aEl = entry.querySelector(".a-text");
+          clearMarks(qEl);
+          clearMarks(aEl);
+
+          var text = entry.textContent.toLowerCase();
+          var textMatches = !query || text.indexOf(query) !== -1;
+          var visible = categoryMatches && textMatches;
+
+          entry.classList.toggle("is-hidden", !visible);
+
+          if (visible) {
+            groupHasVisible = true;
+            visibleCount++;
+            if (query) {
+              highlight(qEl, query);
+              highlight(aEl, query);
+              entry.open = true;
+            } else {
+              entry.open = false;
+            }
+          }
+        });
+
+        group.classList.toggle("is-hidden", !groupHasVisible);
+      });
+
+      resultCount.textContent = query || activeCategory !== "all" ? "該当 " + visibleCount + " 件" : "全" + visibleCount + "件";
+      emptyState.classList.toggle("is-visible", visibleCount === 0);
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        activeCategory = chip.dataset.category;
+        chips.forEach(function (c) { c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
+        applyFilters();
+      });
+    });
+  })();
+</script>
+</body>
+</html>
