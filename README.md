@@ -1,61 +1,100 @@
 # CWBJ FAQ
 
-Code;Without Barriers in Japan（CWBJ）のFAQ公開イメージと、運用フローをまとめたGitHub Pages用のサンプルです。
+Code;Without Barriers in Japan（CWBJ）のFAQ公開ページと、質問の受付から公開までの運用フローです。
 
-## ページ構成
+**Q&Aの中身はHTMLに直接書きません。** `data/faq.json` を `index.html` が読み込んで表示します。
+質問が増えても増えるのはJSONだけで、HTMLは変わりません。
 
-- `index.html` — FAQページのモックアップ
-  - キーワード検索
-  - カテゴリ絞り込み
-  - Q&Aの開閉表示
-- `flow.html` — 質問受付から公開までの運用フロー・システム構成
-- `.nojekyll` — GitHub PagesでJekyll処理を行わず、そのまま静的ファイルを配信するための空ファイル
+## ファイル構成
 
-## 想定している運用
+| パス | 役割 | 編集する人 |
+| --- | --- | --- |
+| `index.html` | FAQページ。データを読み込んで描画する（検索・カテゴリ絞り込み・開閉） | 見た目を変えるときだけ手で編集 |
+| `flow.html` | 質問受付から公開までの運用フロー・システム構成 | 手で編集 |
+| `data/curated.json` | 運営が常設で載せるQ&A | **手で編集** |
+| `data/intake.json` | Formsから届いた質問と回答 | 自動生成（触らない） |
+| `data/faq.json` | 上2つを合成した表示用データ | 自動生成（触らない） |
+| `config/site.json` | カテゴリ一覧・FormsのURL・intakeリポジトリ名 | **手で編集** |
+| `scripts/` | データを組み立てるスクリプト | |
+| `docs/intake-setup.md` | intakeリポジトリ（private）の設定と運用手順 | |
+| `.nojekyll` | GitHub PagesでJekyll処理を行わせないための空ファイル | |
 
-1. 質問者が Microsoft Forms から質問・相談を送信
-2. Power Automate が private な intake リポジトリに GitHub Issue を自動起票
-3. 運営が回答を作成し、個人情報を確認・編集
-4. 公開可能な Issue に「公開」ラベルを付与
-5. GitHub Actions が匿名化済みのQ&Aのみを公開用リポジトリ／GitHub Pagesへ反映
+## データの流れ
 
-詳細は `flow.html` を参照してください。
+```text
+Microsoft Forms
+   ↓ Power Automate（自動）
+intakeリポジトリ（private）のIssue      ← 運営が回答・個人情報チェック・「公開」ラベル
+   ↓ GitHub Actions（自動・collect-issues.mjs）
+data/intake.json  ＋  data/curated.json（手編集）
+   ↓ build-data.mjs
+data/faq.json
+   ↓ fetch
+index.html（GitHub Pages）
+```
+
+個人情報を含む生データはprivateリポジトリに留まり、公開リポジトリへ渡るのは確認を通ったQ&Aだけです。
+詳細は [`flow.html`](flow.html) と [`docs/intake-setup.md`](docs/intake-setup.md) を参照してください。
+
+## 常設のQ&Aを追加・修正する
+
+1. `data/curated.json` の `entries` に追記する
+
+   ```json
+   {
+     "id": "c8",
+     "category": "site",
+     "question": "掲載されたQ&Aはいつ更新されますか？",
+     "answer": "運営で内容を確認したタイミングで更新しています。**太字**、箇条書き、[リンク](https://example.com)が使えます。",
+     "updatedAt": "2026-08-13T00:00:00Z"
+   }
+   ```
+
+   - `id` は他と重複しない文字列（常設分は `c1`, `c2`… の連番）
+   - `category` は `config/site.json` の `categories` にあるID
+   - `answer` はMarkdown（段落・箇条書き・太字・`コード`・httpsリンクのみ）
+2. `node scripts/build-data.mjs` を実行して `data/faq.json` を作り直す
+3. `data/curated.json` と `data/faq.json` をコミットする
+
+`data/faq.json` を作り直さずにpushした場合も、GitHub Actions（`.github/workflows/build-data.yml`）が
+生成し直してコミットします。
+
+## カテゴリ・フォームURLを変える
+
+`config/site.json` を編集して `node scripts/build-data.mjs` を実行します。
+
+- `categories` … 表示順もこの並び順のとおり
+- `formsUrl` … `https://` で始まるURLを入れると「質問・相談を送る」ボタンが有効になる（`#` のままだと無効表示）
+- `intakeRepo` … Issueを読みに行くprivateリポジトリ
+
+## ローカルで確認する
+
+`index.html` を直接ブラウザで開くと、`data/faq.json` の読み込みがブラウザ側の制限（file://）で
+ブロックされます。簡易サーバー経由で開いてください。
+
+```bash
+node scripts/build-data.mjs   # データを組み立てる
+npx serve .                   # または python -m http.server
+```
+
+テストは `node --test "tests/*.test.mjs"`（Node 20以上）。個人情報チェック・Markdown変換・Issue解析を確認します。
 
 ## GitHub Pagesで公開する
 
-GitHub のリポジトリ設定で、Pages の公開元を次のように設定します。
+リポジトリ設定の Pages を次のようにします。
 
 - Source: **Deploy from a branch**
 - Branch: **main**
 - Folder: **/ (root)**
 
-リポジトリ名が `cwbj` の場合、公開URLは通常次の形式になります。
+公開URL（リポジトリ名が `cwbj` の場合）:
 
 ```text
 https://<GitHubユーザー名>.github.io/cwbj/
-```
-
-運用フローは次のURLです。
-
-```text
 https://<GitHubユーザー名>.github.io/cwbj/flow.html
 ```
 
-## ローカルからpushする例
-
-GitHub側で空の `cwbj` リポジトリを作成したあと、このディレクトリで実行します。
-
-```bash
-git init
-git add .
-git commit -m "Add CWBJ FAQ mockup and flow"
-git branch -M main
-git remote add origin https://github.com/<GitHubユーザー名>/cwbj.git
-git push -u origin main
-```
-
-すでにローカルリポジトリとして初期化済みの場合は、`git init` や `git remote add origin` は不要です。
-
 ## 補足
 
-`index.html` の「質問・相談を送る」リンクは現在モック用の `#` です。実運用時に Microsoft Forms のURLへ置き換えてください。
+- `index.html` の「質問・相談を送る」リンクは、`config/site.json` の `formsUrl` が `#` のあいだは無効表示のままです。運用開始時にMicrosoft FormsのURLへ差し替えてください。
+- Q&Aの回答はビルド時にエスケープしてからHTMLへ変換しています。フォームから届いた文章がそのままHTMLとして解釈されることはありません。

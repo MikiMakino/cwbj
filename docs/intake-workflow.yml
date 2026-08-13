@@ -1,0 +1,69 @@
+# intakeリポジトリ（private）に .github/workflows/publish-faq.yml として置くファイル。
+# このリポジトリ（public）には置かない。setup手順は docs/intake-setup.md を参照。
+#
+# やること: 「公開」ラベルの付いたIssueを集める → 表示用データを組み立てる → 公開リポジトリへpush
+# 個人情報を含む生データ（Issue本文）はこのリポジトリから外に出さない。
+# 公開リポジトリへ渡るのは、確認を通ったQ&Aだけ。
+
+name: Publish FAQ
+
+on:
+  issues:
+    types: [labeled, unlabeled, edited, closed, reopened, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
+  workflow_dispatch:
+
+concurrency:
+  group: publish-faq
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # 公開を見送った項目にコメント・「要確認」ラベルを付けるため
+    steps:
+      - name: 公開リポジトリへ書き込むトークンを取得
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.PUBLISHER_APP_ID }}
+          private-key: ${{ secrets.PUBLISHER_APP_PRIVATE_KEY }}
+          owner: MikiMakino
+          repositories: cwbj
+
+      - name: 公開リポジトリをチェックアウト
+        uses: actions/checkout@v4
+        with:
+          repository: MikiMakino/cwbj
+          token: ${{ steps.app-token.outputs.token }}
+          path: site
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 「公開」ラベル付きIssueを集める
+        working-directory: site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # このintakeリポジトリを読むためのトークン
+          INTAKE_REPO: ${{ github.repository }}
+        run: node scripts/collect-issues.mjs
+
+      - name: 表示用データを組み立てる
+        working-directory: site
+        run: node scripts/build-data.mjs
+
+      - name: 変更があれば公開リポジトリへpush
+        working-directory: site
+        run: |
+          if [ -z "$(git status --porcelain data/)" ]; then
+            echo "公開内容に変更はありません"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/intake.json data/faq.json
+          git commit -m "FAQを更新（intakeリポジトリの公開ラベルより）"
+          git push

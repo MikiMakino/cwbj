@@ -165,7 +165,16 @@
       font-size: 14px;
       max-width: 44em;
     }
-    .a-text p { margin: 0; }
+    .a-text p { margin: 0 0 10px; }
+    .a-text p:last-child { margin-bottom: 0; }
+    .a-text ul { margin: 0 0 10px; padding-left: 20px; }
+    .a-text ul:last-child { margin-bottom: 0; }
+    .a-text code {
+      background: #f2f2f2;
+      border-radius: 3px;
+      padding: 0 4px;
+      font-size: 13px;
+    }
     mark { background: #eeeeee; color: #111111; padding: 0 0.1em; }
     .entry.is-hidden, .category-group.is-hidden { display: none; }
     .empty-state {
@@ -177,6 +186,13 @@
       display: none;
     }
     .empty-state.is-visible { display: block; }
+    .status {
+      margin-top: 28px;
+      padding: 20px 0;
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+    }
     .cta-block {
       margin-top: 48px;
       padding-top: 24px;
@@ -207,6 +223,7 @@
       text-decoration: none;
       display: inline-block;
     }
+    .cta[aria-disabled="true"] { background: #777777; border-color: #777777; }
     .fine-print {
       margin-top: 24px;
       font-size: 12px;
@@ -237,119 +254,18 @@
     </label>
     <div class="chips" id="chipRow">
       <button class="chip" type="button" data-category="all" aria-pressed="true">すべて</button>
-      <button class="chip" type="button" data-category="ask" aria-pressed="false">質問・相談について</button>
-      <button class="chip" type="button" data-category="privacy" aria-pressed="false">プライバシーについて</button>
-      <button class="chip" type="button" data-category="site" aria-pressed="false">このサイトについて</button>
     </div>
-    <p class="result-count" id="resultCount">全7件</p>
+    <p class="result-count" id="resultCount" aria-live="polite">読み込み中...</p>
   </div>
 
-  <main id="results">
+  <!-- Q&Aの中身は data/faq.json を読み込んで描画する。HTMLに直接書き足さないこと。 -->
+  <main id="results" aria-busy="true">
 
-    <section class="category-group" data-category="ask">
-      <h2 class="category-heading"><span class="dot"></span>質問・相談について</h2>
-      <div class="entry-list">
+    <p class="status" id="status" role="status">Q&amp;Aを読み込んでいます...</p>
 
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">質問や相談をするのにGitHubアカウントは必要ですか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>いいえ、必要ありません。ページ下部の「質問・相談を送る」から専用フォームに入力するだけで、どなたでも匿名で送ることができます。GitHubは運営側の管理にのみ使用しています。</p></div>
-          </div>
-        </details>
-
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">回答までどのくらい時間がかかりますか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>内容にもよりますが、通常1〜2週間を目安にしています。混み合っている時期は前後することがあります。</p></div>
-          </div>
-        </details>
-
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">送った内容は必ずこのページに掲載されますか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>いいえ。運営内で内容を確認し、他の方の参考になると判断したものだけを掲載しています。個別のご事情に関わる内容は掲載しない場合があります。</p></div>
-          </div>
-        </details>
-
-      </div>
-    </section>
-
-    <section class="category-group" data-category="privacy">
-      <h2 class="category-heading"><span class="dot"></span>プライバシーについて</h2>
-      <div class="entry-list">
-
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">名前や連絡先はFAQに載りますか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>載りません。掲載前に運営側で個人が特定できる情報をすべて取り除いてから公開しています。</p></div>
-          </div>
-        </details>
-
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">一度載った回答を取り下げてほしい場合はどうすればいいですか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>フォームまたは直接のご連絡で取り下げのご希望をお伝えください。確認でき次第、該当項目を非公開にします。</p></div>
-          </div>
-        </details>
-
-      </div>
-    </section>
-
-    <section class="category-group" data-category="site">
-      <h2 class="category-heading"><span class="dot"></span>このサイトについて</h2>
-      <div class="entry-list">
-
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">過去の質問はまとめて見られますか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>公開済みの回答のみ、カテゴリごとに一覧で確認できます。上の検索欄からキーワードで探すこともできます。</p></div>
-          </div>
-        </details>
-
-        <details class="entry">
-          <summary>
-            <span class="q-mark">Q</span>
-            <span class="q-text">このFAQはどうやって更新されていますか？</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <div class="a-body">
-            <span class="a-mark">A</span>
-            <div class="a-text"><p>いただいた質問と回答は運営内で管理し、公開が決まったものだけを自動的にこのページへ反映しています。</p></div>
-          </div>
-        </details>
-
-      </div>
-    </section>
+    <noscript>
+      <p class="status">このページはJavaScriptでQ&amp;Aを読み込みます。JavaScriptを有効にするか、<a href="data/faq.json">データファイル</a>を直接ご覧ください。</p>
+    </noscript>
 
     <p class="empty-state" id="emptyState">該当する質問が見つかりませんでした。キーワードを変えて再度お試しください。</p>
 
@@ -360,21 +276,107 @@
       <h2>探している答えが見つかりませんでしたか?</h2>
       <p>質問・相談は匿名で送ることができます。個人情報は公開前にすべて取り除きます。</p>
     </div>
-    <a class="cta" href="#">質問・相談を送る</a>
+    <a class="cta" id="askLink" href="#" aria-disabled="true">質問・相談を送る</a>
   </div>
 
-  <p class="fine-print">最終更新: 2026年8月9日 ・ 全7件のうち公開中のものを表示しています ・ <a href="flow.html">運用フローを見る</a></p>
+  <p class="fine-print">最終更新: <span id="lastUpdated">-</span> ・ 公開中のQ&amp;A <span id="totalCount">-</span>件を表示しています ・ <a href="flow.html">運用フローを見る</a></p>
 
 </div>
 
 <script>
   (function () {
+    var CHEVRON = '<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
     var searchInput = document.getElementById("searchInput");
-    var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
-    var groups = Array.prototype.slice.call(document.querySelectorAll(".category-group"));
+    var chipRow = document.getElementById("chipRow");
+    var results = document.getElementById("results");
+    var statusEl = document.getElementById("status");
     var resultCount = document.getElementById("resultCount");
     var emptyState = document.getElementById("emptyState");
+    var lastUpdated = document.getElementById("lastUpdated");
+    var totalCount = document.getElementById("totalCount");
+    var askLink = document.getElementById("askLink");
+
+    var groups = [];
+    var totalEntries = 0;
     var activeCategory = "all";
+
+    function formatDate(iso) {
+      if (!iso) return "-";
+      var date = new Date(iso);
+      if (isNaN(date.getTime())) return "-";
+      return new Intl.DateTimeFormat("ja-JP", {
+        timeZone: "Asia/Tokyo", year: "numeric", month: "long", day: "numeric"
+      }).format(date);
+    }
+
+    function buildEntry(entry) {
+      var details = document.createElement("details");
+      details.className = "entry";
+      details.id = "q-" + entry.id;
+
+      var summary = document.createElement("summary");
+      var qMark = document.createElement("span");
+      qMark.className = "q-mark";
+      qMark.textContent = "Q";
+      var qText = document.createElement("span");
+      qText.className = "q-text";
+      qText.textContent = entry.question;
+      summary.appendChild(qMark);
+      summary.appendChild(qText);
+      summary.insertAdjacentHTML("beforeend", CHEVRON);
+
+      var body = document.createElement("div");
+      body.className = "a-body";
+      var aMark = document.createElement("span");
+      aMark.className = "a-mark";
+      aMark.textContent = "A";
+      var aText = document.createElement("div");
+      aText.className = "a-text";
+      // answerHtml は scripts/build-data.mjs がエスケープした上で組み立てたHTML。
+      aText.innerHTML = entry.answerHtml;
+      body.appendChild(aMark);
+      body.appendChild(aText);
+
+      details.appendChild(summary);
+      details.appendChild(body);
+      // 検索対象は質問文と回答本文だけ。"Q" / "A" の記号まで拾うと1文字検索が全件に当たる。
+      details.dataset.searchText = (entry.question + " " + aText.textContent).toLowerCase();
+      return details;
+    }
+
+    function buildGroup(category, entries) {
+      var section = document.createElement("section");
+      section.className = "category-group";
+      section.dataset.category = category.id;
+
+      var heading = document.createElement("h2");
+      heading.className = "category-heading";
+      var dot = document.createElement("span");
+      dot.className = "dot";
+      heading.appendChild(dot);
+      heading.appendChild(document.createTextNode(category.label));
+
+      var list = document.createElement("div");
+      list.className = "entry-list";
+      entries.forEach(function (entry) { list.appendChild(buildEntry(entry)); });
+
+      section.appendChild(heading);
+      section.appendChild(list);
+      return section;
+    }
+
+    function buildChips(categories) {
+      categories.forEach(function (category) {
+        var chip = document.createElement("button");
+        chip.className = "chip";
+        chip.type = "button";
+        chip.dataset.category = category.id;
+        chip.setAttribute("aria-pressed", "false");
+        chip.textContent = category.label;
+        chipRow.appendChild(chip);
+      });
+    }
 
     function clearMarks(el) {
       el.querySelectorAll("mark").forEach(function (m) {
@@ -417,8 +419,7 @@
           clearMarks(qEl);
           clearMarks(aEl);
 
-          var text = entry.textContent.toLowerCase();
-          var textMatches = !query || text.indexOf(query) !== -1;
+          var textMatches = !query || (entry.dataset.searchText || "").indexOf(query) !== -1;
           var visible = categoryMatches && textMatches;
 
           entry.classList.toggle("is-hidden", !visible);
@@ -440,18 +441,84 @@
       });
 
       resultCount.textContent = query || activeCategory !== "all" ? "該当 " + visibleCount + " 件" : "全" + visibleCount + "件";
-      emptyState.classList.toggle("is-visible", visibleCount === 0);
+      emptyState.classList.toggle("is-visible", visibleCount === 0 && totalEntries > 0);
     }
 
-    searchInput.addEventListener("input", applyFilters);
-
-    chips.forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        activeCategory = chip.dataset.category;
-        chips.forEach(function (c) { c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
-        applyFilters();
+    function bindControls() {
+      chipRow.querySelectorAll(".chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          activeCategory = chip.dataset.category;
+          chipRow.querySelectorAll(".chip").forEach(function (other) {
+            other.setAttribute("aria-pressed", other === chip ? "true" : "false");
+          });
+          applyFilters();
+        });
       });
-    });
+      searchInput.addEventListener("input", applyFilters);
+    }
+
+    function render(data) {
+      var categories = data.categories || [];
+      var entries = data.entries || [];
+      totalEntries = entries.length;
+
+      buildChips(categories);
+
+      // 1回のループでカテゴリごとにまとめ、組み立てた分をまとめて差し込む
+      // （カテゴリごとにfilterすると走査がカテゴリ数×件数になり、挿入も回数分の再描画を招く）。
+      var grouped = new Map();
+      entries.forEach(function (entry) {
+        if (!grouped.has(entry.category)) grouped.set(entry.category, []);
+        grouped.get(entry.category).push(entry);
+      });
+
+      var fragment = document.createDocumentFragment();
+      categories.forEach(function (category) {
+        var groupEntries = grouped.get(category.id);
+        if (!groupEntries) return;
+        fragment.appendChild(buildGroup(category, groupEntries));
+      });
+      results.insertBefore(fragment, emptyState);
+
+      groups = Array.prototype.slice.call(results.querySelectorAll(".category-group"));
+      totalCount.textContent = String(totalEntries);
+      lastUpdated.textContent = formatDate(data.updatedAt);
+
+      if (data.formsUrl && data.formsUrl.indexOf("https://") === 0) {
+        askLink.href = data.formsUrl;
+        askLink.removeAttribute("aria-disabled");
+        askLink.target = "_blank";
+        askLink.rel = "noopener";
+      }
+
+      if (totalEntries === 0) {
+        statusEl.textContent = "まだ公開中のQ&Aはありません。質問が届き次第、順次掲載します。";
+        resultCount.textContent = "全0件";
+      } else {
+        // 描画後に失敗したときの表示先として残しておき、隠すだけにする。
+        statusEl.hidden = true;
+        applyFilters();
+      }
+
+      results.setAttribute("aria-busy", "false");
+      bindControls();
+    }
+
+    function showError(error) {
+      results.setAttribute("aria-busy", "false");
+      statusEl.hidden = false;
+      statusEl.textContent = "Q&Aを読み込めませんでした。時間をおいて再度お試しください。";
+      resultCount.textContent = "";
+      console.error(error);
+    }
+
+    fetch("data/faq.json", { cache: "no-cache" })
+      .then(function (response) {
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+      })
+      .then(render)
+      .catch(showError);
   })();
 </script>
 </body>

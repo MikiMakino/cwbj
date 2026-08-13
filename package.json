@@ -1,0 +1,17 @@
+{
+  "name": "cwbj-faq",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CWBJ FAQ の公開ページと、intakeリポジトリのIssueから公開データを組み立てるスクリプト",
+  "scripts": {
+    "build": "node scripts/build-data.mjs",
+    "check": "node scripts/build-data.mjs --check",
+    "collect": "node scripts/collect-issues.mjs",
+    "serve": "node --run build && npx --yes serve .",
+    "test": "node --test \"tests/*.test.mjs\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
