@@ -4,8 +4,11 @@ import assert from "node:assert/strict";
 import { renderMarkdown, escapeHtml } from "../scripts/lib/markdown.mjs";
 import { scanPii, formatPiiReport } from "../scripts/lib/pii.mjs";
 import { parseIssue, parseSections, pickAnswer, pickCategory } from "../scripts/lib/parse-issue.mjs";
+import { assertLabelNames, missingRequiredLabels } from "../scripts/lib/labels.mjs";
+import { loadConfig } from "../scripts/lib/config.mjs";
 
 const config = {
+  labels: { publish: "公開", review: "要確認", reviewed: "レビュー済", piiReviewed: "PII確認済" },
   defaultCategory: "ask",
   categories: [
     { id: "ask", label: "質問・相談について" },
@@ -79,6 +82,66 @@ test("コードブロックを閉じ忘れても壊れない", () => {
 test("言語名に使えない文字は言語指定として扱わない", () => {
   const html = renderMarkdown('```js"onload="x\ncode\n```');
   assert.ok(!html.includes("language-"), "不正な言語名がクラスに入っています: " + html);
+});
+
+const withLabels = (...names) => ({ labels: names.map((name) => ({ name })) });
+
+test("3つのラベルが揃ったときだけ公開の対象にする", () => {
+  assert.deepEqual(missingRequiredLabels(withLabels("公開", "レビュー済", "PII確認済"), config), []);
+});
+
+test("ラベルが欠けていれば不足分を返す", () => {
+  assert.deepEqual(missingRequiredLabels(withLabels("公開"), config), ["レビュー済", "PII確認済"]);
+  assert.deepEqual(missingRequiredLabels(withLabels("公開", "レビュー済"), config), ["PII確認済"]);
+  assert.deepEqual(missingRequiredLabels(withLabels("レビュー済", "PII確認済"), config), ["公開"]);
+});
+
+test("ラベルが文字列の配列で来ても判定できる", () => {
+  assert.deepEqual(missingRequiredLabels({ labels: ["公開", "レビュー済", "PII確認済"] }, config), []);
+  assert.deepEqual(missingRequiredLabels({ labels: ["公開", "PII確認済"] }, config), ["レビュー済"]);
+});
+
+test("文字列とオブジェクトが混ざっていても判定できる", () => {
+  const mixed = { labels: ["公開", { name: "レビュー済" }, "PII確認済"] };
+  assert.deepEqual(missingRequiredLabels(mixed, config), []);
+});
+
+// 設定の検証は2段階に分かれている。
+//   loadConfig()（assertLabelNames）… 設定ファイルの入口。差し戻し用の review も含めて全キーを確認する
+//   missingRequiredLabels          … Issueごとの判定。公開に必要な3キーだけを前提にする
+const withoutReview = { labels: { publish: "公開", reviewed: "レビュー済", piiReviewed: "PII確認済" } };
+
+test("設定の入口検証は、差し戻し用の review も含めて全キーを確認する", () => {
+  assert.throws(() => assertLabelNames(withoutReview), /labels\.review が未設定/);
+  assert.throws(() => assertLabelNames({ labels: {} }), /labels\.publish が未設定/);
+  assert.doesNotThrow(() => assertLabelNames(config));
+});
+
+test("実際の config/site.json が入口検証を通る", () => {
+  assert.doesNotThrow(() => loadConfig());
+});
+
+test("Issueの判定は、公開に必要な3キーだけを前提にする", () => {
+  // review は判定に使わないので、欠けていても判定は動く
+  assert.deepEqual(missingRequiredLabels({ labels: ["公開", "レビュー済", "PII確認済"] }, withoutReview), []);
+
+  // 判定に必要なキーが欠けていれば、どれが足りないかを示して止める
+  const noPii = { labels: { publish: "公開", review: "要確認", reviewed: "レビュー済" } };
+  assert.throws(() => missingRequiredLabels({ labels: [] }, noPii), /labels\.piiReviewed が未設定/);
+});
+
+test("ラベルの形が想定外でも例外にせず無視する", () => {
+  const broken = { labels: [null, undefined, { name: undefined }, { name: "" }, "公開", { name: "レビュー済" }] };
+  assert.deepEqual(missingRequiredLabels(broken, config), ["PII確認済"]);
+  assert.deepEqual(missingRequiredLabels({}, config), ["公開", "レビュー済", "PII確認済"]);
+});
+
+test("関係ないラベルが付いていても判定は変わらない", () => {
+  assert.deepEqual(
+    missingRequiredLabels(withLabels("公開", "レビュー済", "PII確認済", "cat:privacy", "要確認"), config),
+    [],
+  );
+  assert.deepEqual(missingRequiredLabels({ labels: [] }, config), ["公開", "レビュー済", "PII確認済"]);
 });
 
 test("取り消し線を del にする", () => {

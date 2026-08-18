@@ -13,6 +13,7 @@ import { createHash } from "node:crypto";
 import { loadConfig, pathIn } from "./lib/config.mjs";
 import { apiPaginate, apiRequest } from "./lib/github.mjs";
 import { parseIssue } from "./lib/parse-issue.mjs";
+import { labelNamesOf, missingRequiredLabels } from "./lib/labels.mjs";
 import { scanPii, formatPiiReport } from "./lib/pii.mjs";
 
 const args = process.argv.slice(2);
@@ -34,10 +35,6 @@ function note(line) {
   console.log(line);
 }
 
-function labelNamesOf(issue) {
-  return (issue.labels || []).map((label) => (typeof label === "string" ? label : label.name));
-}
-
 function fingerprint(problems, piiHits) {
   const seed = JSON.stringify([problems, piiHits.map((h) => [h.id, h.samples])]);
   return createHash("sha256").update(seed).digest("hex").slice(0, 12);
@@ -50,7 +47,7 @@ async function reportBack(issue, comments, problems, piiHits) {
 
   const body = [
     marker,
-    "**このIssueは公開されませんでした。**内容を直すと、次回のラベル操作またはワークフロー再実行で自動的に再判定されます。",
+    "**このIssueは公開されませんでした。** 下記を直してください。",
     "",
     ...(problems.length > 0 ? ["**不足している項目**", ...problems.map((p) => `- ${p}`), ""] : []),
     ...(piiHits.length > 0
@@ -58,10 +55,14 @@ async function reportBack(issue, comments, problems, piiHits) {
           "**個人情報の可能性がある記述**",
           formatPiiReport(piiHits),
           "",
-          `誤検知の場合は \`${config.labels.piiAck}\` ラベルを付けると、このチェックを飛ばして公開します。`,
+          "該当箇所は削除するか、サンプル値に書き換えてください。自動チェックを飛ばす方法はありません。",
           "",
         ]
       : []),
+    "**直したあと**",
+    `- 回答コメントを編集すれば、その時点で自動的に再判定されます（ラベルの操作は不要です）`,
+    `- すぐに反映したいときは、Actions の \`Publish FAQ\` を手動実行してください`,
+    `- 公開できる状態になれば、\`${config.labels.review}\` ラベルは自動で外れます`,
   ].join("\n");
 
   if (dryRun) {
@@ -95,13 +96,24 @@ async function main() {
 
   const entries = [];
   const skipped = [];
+  const waiting = [];
 
   for (const issue of issues) {
+    // ラベルが揃っていないものは「まだ確認の途中」なので、
+    // 差し戻しコメントは付けず、保留として記録するだけにする。
+    const missingLabels = missingRequiredLabels(issue, config);
+    if (missingLabels.length > 0) {
+      const reasons = missingLabels.map((label) => `「${label}」ラベルがありません`);
+      waiting.push({ number: issue.number, reasons });
+      note(`  #${issue.number} 公開待ち: ${reasons.join(" / ")}`);
+      continue;
+    }
+
     const comments = await apiPaginate(token, `/repos/${config.intakeRepo}/issues/${issue.number}/comments?per_page=100`);
     const { entry, problems } = parseIssue(issue, comments, config);
 
     const piiTarget = entry ? `${entry.question}\n${entry.answer}` : "";
-    const piiHits = entry && !labelNamesOf(issue).includes(config.labels.piiAck) ? scanPii(piiTarget) : [];
+    const piiHits = entry ? scanPii(piiTarget) : [];
 
     if (!entry || piiHits.length > 0) {
       const reasons = [...problems, ...piiHits.map((hit) => `${hit.label}を検知`)];
@@ -133,7 +145,7 @@ async function main() {
 
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
-  note(`公開: ${entries.length}件 / 見送り: ${skipped.length}件 → ${outPath}`);
+  note(`公開: ${entries.length}件 / 公開待ち: ${waiting.length}件 / 見送り: ${skipped.length}件 → ${outPath}`);
 
   if (process.env.GITHUB_STEP_SUMMARY) {
     appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### FAQ収集結果\n\n${summaryLines.join("\n\n")}\n`, "utf8");

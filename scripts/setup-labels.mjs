@@ -19,7 +19,8 @@ if (!/^[\w.-]+\/[\w.-]+$/.test(config.intakeRepo)) {
 const wanted = [
   { name: config.labels.publish, color: "0E8A16", description: "このQ&Aを公開する" },
   { name: config.labels.review, color: "D93F0B", description: "自動チェックで公開を見送った項目" },
-  { name: config.labels.piiAck, color: "FBCA04", description: "個人情報チェックの誤検知を承認する" },
+  { name: config.labels.reviewed, color: "5319E7", description: "内容レビューが完了した項目" },
+  { name: config.labels.piiReviewed, color: "FBCA04", description: "個人情報チェックが完了した項目" },
   ...config.categories.map((category) => ({
     name: `cat:${category.id}`,
     color: "1D76DB",

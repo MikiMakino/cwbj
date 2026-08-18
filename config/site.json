@@ -5,7 +5,8 @@
   "labels": {
     "publish": "公開",
     "review": "要確認",
-    "piiAck": "PII確認済"
+    "reviewed": "レビュー済",
+    "piiReviewed": "PII確認済"
   },
   "defaultCategory": "ask",
   "categories": [
