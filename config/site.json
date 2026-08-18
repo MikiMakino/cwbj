@@ -1,7 +1,7 @@
 {
   "siteTitle": "CWBJ FAQ",
-  "formsUrl": "#",
-  "intakeRepo": "MikiMakino/cwbj-intake",
+  "formsUrl": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DSqS4jtWTk2EDnAk9xOM7LUqRrvmN35Km5YAUpUGC5pUMkJRRkRTS00zS0pXWTIyTFc2QkJDSFpZUSQlQCN0PWcu",
+  "intakeRepo": "MikiMakino/cwbjapan",
   "labels": {
     "publish": "公開",
     "review": "要確認",

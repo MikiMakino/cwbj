@@ -13,6 +13,15 @@ on:
   issue_comment:
     types: [created, edited, deleted]
   workflow_dispatch:
+    inputs:
+      setup_labels:
+        description: "必要なラベルを作成する（初回のみ）"
+        type: boolean
+        default: false
+      dry_run:
+        description: "公開リポジトリへpushせず、反映される差分の確認だけ行う"
+        type: boolean
+        default: false
 
 concurrency:
   group: publish-faq
@@ -44,6 +53,14 @@ jobs:
         with:
           node-version: "20"
 
+      - name: ラベルを用意する（初回のみ・手動実行時）
+        if: inputs.setup_labels
+        working-directory: site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INTAKE_REPO: ${{ github.repository }}
+        run: node scripts/setup-labels.mjs
+
       - name: 「公開」ラベル付きIssueを集める
         working-directory: site
         env:
@@ -55,7 +72,19 @@ jobs:
         working-directory: site
         run: node scripts/build-data.mjs
 
+      - name: 反映される差分を確認する（dry run）
+        if: inputs.dry_run
+        working-directory: site
+        run: |
+          echo "### dry run: 公開リポジトリへの反映は行いません" >> "$GITHUB_STEP_SUMMARY"
+          if [ -z "$(git status --porcelain data/)" ]; then
+            echo "公開内容に変更はありません" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git diff --stat data/ | tee -a "$GITHUB_STEP_SUMMARY"
+
       - name: 変更があれば公開リポジトリへpush
+        if: ${{ !inputs.dry_run }}
         working-directory: site
         run: |
           if [ -z "$(git status --porcelain data/)" ]; then

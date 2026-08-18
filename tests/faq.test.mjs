@@ -42,6 +42,109 @@ test("インラインコードの中はMarkdownとして解釈しない", () => 
   assert.equal(renderMarkdown("**太字**と`コード`"), "<p><strong>太字</strong>と<code>コード</code></p>");
 });
 
+test("コードブロックを pre/code にする", () => {
+  assert.equal(
+    renderMarkdown("手順です。\n\n```bash\nnpm install\n```"),
+    '<p>手順です。</p><pre><code class="language-bash">npm install</code></pre>',
+  );
+  assert.equal(renderMarkdown("```\nplain\n```"), "<pre><code>plain</code></pre>");
+});
+
+test("コードブロックは空行を含んでも1つのまとまりになる", () => {
+  assert.equal(
+    renderMarkdown("```js\nconst a = 1;\n\nconsole.log(a);\n```"),
+    '<pre><code class="language-js">const a = 1;\n\nconsole.log(a);</code></pre>',
+  );
+});
+
+test("前後に空行がなくてもコードブロックを段落から分離する", () => {
+  assert.equal(
+    renderMarkdown("説明します。\n```sh\nls -la\n```\n続きです。"),
+    '<p>説明します。</p><pre><code class="language-sh">ls -la</code></pre><p>続きです。</p>',
+  );
+});
+
+test("コードブロックの中身はHTMLもMarkdownも解釈しない", () => {
+  const html = renderMarkdown("```\n<script>alert(1)</script>\n**太字**にならない\n[表示](https://example.com)\n```");
+  assert.ok(html.includes("&lt;script&gt;"));
+  assert.ok(!html.includes("<strong>"));
+  assert.ok(!html.includes("<a "));
+  assert.ok(html.includes("**太字**にならない"));
+});
+
+test("コードブロックを閉じ忘れても壊れない", () => {
+  assert.equal(renderMarkdown("```bash\nnpm test"), '<pre><code class="language-bash">npm test</code></pre>');
+});
+
+test("言語名に使えない文字は言語指定として扱わない", () => {
+  const html = renderMarkdown('```js"onload="x\ncode\n```');
+  assert.ok(!html.includes("language-"), "不正な言語名がクラスに入っています: " + html);
+});
+
+test("取り消し線を del にする", () => {
+  assert.equal(renderMarkdown("~~旧手順~~ は廃止"), "<p><del>旧手順</del> は廃止</p>");
+  assert.ok(!renderMarkdown("`~~記号のまま~~`").includes("<del>"));
+  assert.ok(!renderMarkdown("```\n~~記号のまま~~\n```").includes("<del>"));
+});
+
+test("チェックリストを操作できないチェックボックスにする", () => {
+  assert.equal(
+    renderMarkdown("- [ ] 未完了\n- [x] 完了"),
+    '<ul class="task-list">' +
+      '<li class="task"><input type="checkbox" disabled><span>未完了</span></li>' +
+      '<li class="task"><input type="checkbox" disabled checked><span>完了</span></li>' +
+      "</ul>",
+  );
+  assert.ok(renderMarkdown("- [X] 大文字").includes("checked"));
+});
+
+test("チェックリストと通常の項目が混ざっても両方出す", () => {
+  const html = renderMarkdown("- [ ] タスク\n- ふつうの項目");
+  assert.ok(html.includes('<li class="task">'));
+  assert.ok(html.includes("<li>ふつうの項目</li>"));
+});
+
+test("リンクのURLに含まれる記号を強調として書き換えない", () => {
+  assert.equal(
+    renderMarkdown("[資料](https://example.com/x**y**z)"),
+    '<p><a href="https://example.com/x**y**z" target="_blank" rel="noopener">資料</a></p>',
+  );
+  assert.ok(!renderMarkdown("[資料](https://example.com/a~~b~~c)").includes("<del>"));
+});
+
+test("リンクのラベルには強調が効く", () => {
+  assert.ok(renderMarkdown("[**重要**な資料](https://example.com)").includes("<strong>重要</strong>"));
+});
+
+test("番号付きリストを ol にする", () => {
+  assert.equal(
+    renderMarkdown("1. 作成する\n2. 実行する"),
+    "<ol><li>作成する</li><li>実行する</li></ol>",
+  );
+  assert.equal(renderMarkdown("1) 一つ目\n2) 二つ目"), "<ol><li>一つ目</li><li>二つ目</li></ol>");
+});
+
+test("1以外から始まる番号付きリストは開始番号を保つ", () => {
+  assert.equal(renderMarkdown("3. 三番目\n4. 四番目"), '<ol start="3"><li>三番目</li><li>四番目</li></ol>');
+});
+
+test("引用を blockquote にする", () => {
+  assert.equal(
+    renderMarkdown("> 前日まで受け付けます。\n> 定員で締め切ります。"),
+    "<blockquote><p>前日まで受け付けます。<br>定員で締め切ります。</p></blockquote>",
+  );
+});
+
+test("リストと引用の中でも太字・リンク・コードが効く", () => {
+  assert.ok(renderMarkdown("> **重要**です").includes("<strong>重要</strong>"));
+  assert.ok(renderMarkdown("1. `npm ci` を実行").includes("<code>npm ci</code>"));
+  assert.ok(renderMarkdown("1. [資料](https://example.com)").includes('<a href="https://example.com"'));
+});
+
+test("リスト記号で始まらない行が混ざる場合は段落のままにする", () => {
+  assert.equal(renderMarkdown("手順:\n1. 一つ目"), "<p>手順:<br>1. 一つ目</p>");
+});
+
 test("箇条書きと段落を組み立てる", () => {
   const html = renderMarkdown("最初の段落\n2行目\n\n- 一つ目\n- 二つ目");
   assert.equal(html, "<p>最初の段落<br>2行目</p><ul><li>一つ目</li><li>二つ目</li></ul>");

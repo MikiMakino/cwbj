@@ -52,7 +52,7 @@ index.html（GitHub Pages）
 
    - `id` は他と重複しない文字列（常設分は `c1`, `c2`… の連番）
    - `category` は `config/site.json` の `categories` にあるID
-   - `answer` はMarkdown（段落・箇条書き・太字・`コード`・httpsリンクのみ）
+   - `answer` はMarkdown（段落・各種リスト・引用・太字・取り消し線・`コード`・``` のコードブロック・httpsリンク。画像と表は非対応）
 2. `node scripts/build-data.mjs` を実行して `data/faq.json` を作り直す
 3. `data/curated.json` と `data/faq.json` をコミットする
 

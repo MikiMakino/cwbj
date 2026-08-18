@@ -161,19 +161,79 @@
     }
     .a-text {
       flex: 1;
+      /* flexの子は既定で内容幅より縮まないため、長いコード行がページを横に広げてしまう */
+      min-width: 0;
       color: #444444;
       font-size: 14px;
       max-width: 44em;
     }
     .a-text p { margin: 0 0 10px; }
     .a-text p:last-child { margin-bottom: 0; }
-    .a-text ul { margin: 0 0 10px; padding-left: 20px; }
-    .a-text ul:last-child { margin-bottom: 0; }
+    .a-text ul, .a-text ol { margin: 0 0 10px; padding-left: 22px; }
+    .a-text ul:last-child, .a-text ol:last-child { margin-bottom: 0; }
+    .a-text li { margin: 0 0 4px; }
+    .a-text .task-list { list-style: none; padding-left: 2px; }
+    .a-text .task-list .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    /* 既定の無効チェックボックスは淡すぎてUI要素のコントラスト基準を満たさないため、自前で描く */
+    .a-text .task-list input {
+      appearance: none;
+      flex: none;
+      position: relative;
+      width: 16px;
+      height: 16px;
+      margin: 6px 0 0;
+      border: 1.5px solid #333333;
+      border-radius: 3px;
+      background: #ffffff;
+    }
+    .a-text .task-list input:checked::after {
+      content: "";
+      position: absolute;
+      left: 4.5px;
+      top: 1px;
+      width: 4px;
+      height: 8px;
+      border: solid #333333;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .a-text del { color: #777777; }
+    .a-text blockquote {
+      margin: 0 0 10px;
+      padding: 6px 0 6px 12px;
+      border-left: 3px solid #bbbbbb;
+      color: #555555;
+    }
+    .a-text blockquote:last-child { margin-bottom: 0; }
+    .a-text blockquote p { margin: 0; }
     .a-text code {
       background: #f2f2f2;
       border-radius: 3px;
       padding: 0 4px;
       font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Courier New", monospace;
+    }
+    .a-text pre {
+      margin: 0 0 10px;
+      padding: 12px 14px;
+      background: #f6f6f6;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      /* 長い行は横スクロールさせる。折り返すとコマンドやコードの意味が変わることがある */
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .a-text pre:last-child { margin-bottom: 0; }
+    .a-text pre code {
+      background: none;
+      border-radius: 0;
+      padding: 0;
+      font-size: inherit;
     }
     mark { background: #eeeeee; color: #111111; padding: 0 0.1em; }
     .entry.is-hidden, .category-group.is-hidden { display: none; }
