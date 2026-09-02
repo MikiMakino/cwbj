@@ -1,16 +1,8 @@
 {
-  "updatedAt": "2026-08-18T23:41:55Z",
+  "updatedAt": "",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
   },
-  "entries": [
-    {
-      "id": 3,
-      "category": "ask",
-      "question": "【テスト】FAQ公開確認",
-      "answer": "公開対象になったFAQは、GitHub Actionsを通して自動的に公開用データへ反映されます。",
-      "updatedAt": "2026-08-18T23:41:55Z"
-    }
-  ]
+  "entries": []
 }
