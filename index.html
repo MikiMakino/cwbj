@@ -6,24 +6,32 @@
   <title>CWBJ FAQ</title>
   <style>
 
+    :root {
+      --yellow: #FFCE2B;
+      --ink: #141414;
+      --cream: #FFFBF0;
+      --blue: #2E76BC;
+    }
     * { box-sizing: border-box; }
-    html, body { background: #ffffff; }
+    html, body { background: var(--cream); }
     body {
       margin: 0;
-      color: #111111;
+      color: var(--ink);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Yu Gothic", "Meiryo", sans-serif;
       line-height: 1.75;
       -webkit-font-smoothing: antialiased;
     }
-    a { color: #111111; }
+    a { color: var(--blue); }
     .page {
       max-width: 780px;
       margin: 0 auto;
-      padding: 48px 24px 64px;
+      padding: 0 24px 64px;
     }
     .masthead {
-      padding-bottom: 24px;
-      border-bottom: 1px solid #d9d9d9;
+      background: #ffffff;
+      margin: 0 -24px;
+      padding: 32px 24px 20px;
+      border-bottom: 4px solid var(--yellow);
     }
     h1.title {
       margin: 0;
@@ -63,7 +71,7 @@
       padding: 11px 12px 11px 38px;
       outline: none;
     }
-    .search input:focus-visible { border-color: #111111; outline: 1px solid #111111; }
+    .search input:focus-visible { border-color: var(--blue); outline: 1px solid var(--blue); }
     .search input::placeholder { color: #777777; }
     .search svg {
       position: absolute;
@@ -93,19 +101,52 @@
     }
     .chip:hover { border-color: #777777; }
     .chip[aria-pressed="true"] {
-      color: #111111;
-      background: #f2f2f2;
-      border-color: #777777;
+      color: var(--ink);
+      background: var(--yellow);
+      border-color: var(--yellow);
       font-weight: 700;
     }
     .chip:focus-visible, summary:focus-visible, .cta:focus-visible {
-      outline: 2px solid #111111;
+      outline: 2px solid var(--blue);
       outline-offset: 2px;
     }
     .result-count {
       margin: 10px 0 0;
       font-size: 12px;
       color: #666666;
+    }
+    .toc {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 14px;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-radius: 6px;
+    }
+    .toc.is-visible { display: flex; }
+    .toc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--cream);
+      text-decoration: none;
+    }
+    .toc-link:hover { background: #f5efd9; }
+    .toc-link:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    .toc-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      background: var(--blue);
+      border-radius: 10px;
+      padding: 1px 7px;
     }
     .category-group { margin-top: 34px; }
     .category-heading {
@@ -127,11 +168,13 @@
     details.entry summary::-webkit-details-marker { display: none; }
     .q-mark {
       flex: none;
-      width: 24px;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      color: #333333;
-      padding-top: 1px;
+      color: #ffffff;
+      background: var(--blue);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-top: 1px;
     }
     .q-text {
       flex: 1;
@@ -154,10 +197,12 @@
     }
     .a-mark {
       flex: none;
-      width: 24px;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      color: #333333;
+      color: var(--ink);
+      background: var(--yellow);
+      border-radius: 4px;
+      padding: 2px 6px;
     }
     .a-text {
       flex: 1;
@@ -235,8 +280,23 @@
       padding: 0;
       font-size: inherit;
     }
-    mark { background: #eeeeee; color: #111111; padding: 0 0.1em; }
-    .entry.is-hidden, .category-group.is-hidden { display: none; }
+    mark { background: var(--yellow); color: var(--ink); padding: 0 0.1em; }
+    .more-toggle {
+      display: block;
+      margin: 4px 2px 0;
+      padding: 10px 0;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+    }
+    .more-toggle:hover { text-decoration: underline; }
+    .more-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    .entry.is-hidden, .category-group.is-hidden, .more-toggle.is-hidden { display: none; }
     .empty-state {
       margin-top: 28px;
       padding: 20px 0;
@@ -256,7 +316,7 @@
     .cta-block {
       margin-top: 48px;
       padding-top: 24px;
-      border-top: 1px solid #cccccc;
+      border-top: 2px solid var(--yellow);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -274,8 +334,8 @@
       font-weight: 700;
       font-size: 14px;
       color: #ffffff;
-      background: #111111;
-      border: 1px solid #111111;
+      background: var(--blue);
+      border: 1px solid var(--blue);
       border-radius: 4px;
       padding: 10px 14px;
       white-space: nowrap;
@@ -289,11 +349,15 @@
       font-size: 12px;
       color: #666666;
     }
-    .fine-print a { color: #555555; }
+    .fine-print a { color: var(--blue); }
     @media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
     @media (max-width: 520px) {
-      .page { padding: 32px 18px 48px; }
+      .page { padding: 0 18px 48px; }
+      .masthead { margin: 0 -18px; padding: 24px 18px 16px; }
       .toolbar { padding-top: 14px; }
+      /* カテゴリが多い運営後を想定: チップが2〜3行に折り返すと、スクロール中ずっと画面の大部分を固定バーが占めてしまうため、
+         その場合だけ追従をやめて検索欄ごと通常のスクロールに戻す。 */
+      .toolbar.many-categories { position: static; }
       .cta-block { flex-direction: column; align-items: flex-start; }
     }
   </style>
@@ -307,7 +371,7 @@
     <p class="lede">寄せられた質問と相談をまとめています。運営内で内容を確認し、公開に適したものだけを掲載しています。</p>
   </header>
 
-  <div class="toolbar">
+  <div class="toolbar" id="toolbar">
     <label class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <input type="text" id="searchInput" placeholder="キーワードで検索(例: 個人情報、削除、GitHub)" autocomplete="off">
@@ -317,6 +381,9 @@
     </div>
     <p class="result-count" id="resultCount" aria-live="polite">読み込み中...</p>
   </div>
+
+  <!-- 21件以上のときだけ、カテゴリへのジャンプリンクとして表示する。 -->
+  <nav class="toc" id="tocCard" aria-label="カテゴリ一覧"></nav>
 
   <!-- Q&Aの中身は data/faq.json を読み込んで描画する。HTMLに直接書き足さないこと。 -->
   <main id="results" aria-busy="true">
@@ -339,16 +406,23 @@
     <a class="cta" id="askLink" href="#" aria-disabled="true">質問・相談を送る</a>
   </div>
 
-  <p class="fine-print">最終更新: <span id="lastUpdated">-</span> ・ 公開中のQ&amp;A <span id="totalCount">-</span>件を表示しています ・ <a href="flow.html">運用フローを見る</a></p>
+  <p class="fine-print">最終更新: <span id="lastUpdated">-</span> ・ 公開中のQ&amp;A <span id="totalCount">-</span>件を掲載しています ・ <a href="flow.html">運用フローを見る</a></p>
 
 </div>
 
 <script>
   (function () {
     var CHEVRON = '<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+    // 総件数がこの件数以上になったら、カテゴリごとに先頭FOLD_LIMIT件＋「残りを表示」に切り替え、目次カードも出す。
+    var FOLD_TOTAL_THRESHOLD = 21;
+    var FOLD_LIMIT = 5;
+    // カテゴリがこの数以上になったら、モバイルでチップ折り返しが固定バーを占領しないよう追従をやめる。
+    var MANY_CATEGORIES_THRESHOLD = 5;
 
     var searchInput = document.getElementById("searchInput");
+    var toolbar = document.getElementById("toolbar");
     var chipRow = document.getElementById("chipRow");
+    var tocCard = document.getElementById("tocCard");
     var results = document.getElementById("results");
     var statusEl = document.getElementById("status");
     var resultCount = document.getElementById("resultCount");
@@ -360,6 +434,10 @@
     var groups = [];
     var totalEntries = 0;
     var activeCategory = "all";
+
+    function prefersReducedMotion() {
+      return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
 
     function formatDate(iso) {
       if (!iso) return "-";
@@ -408,6 +486,7 @@
     function buildGroup(category, entries) {
       var section = document.createElement("section");
       section.className = "category-group";
+      section.id = "cat-" + category.id;
       section.dataset.category = category.id;
 
       var heading = document.createElement("h2");
@@ -419,10 +498,40 @@
 
       var list = document.createElement("div");
       list.className = "entry-list";
-      entries.forEach(function (entry) { list.appendChild(buildEntry(entry)); });
+      var shouldFold = totalEntries >= FOLD_TOTAL_THRESHOLD && entries.length > FOLD_LIMIT;
+      var foldedIds = [];
+      entries.forEach(function (entry, index) {
+        var entryEl = buildEntry(entry);
+        if (shouldFold && index >= FOLD_LIMIT) {
+          // is-hiddenも最初から付けておく。表示の正しさをapplyFilters()が必ず呼ばれることに依存させない。
+          entryEl.classList.add("is-folded", "is-hidden");
+          foldedIds.push(entryEl.id);
+        }
+        list.appendChild(entryEl);
+      });
 
       section.appendChild(heading);
       section.appendChild(list);
+
+      if (shouldFold) {
+        var hiddenCount = entries.length - FOLD_LIMIT;
+        var moreLabel = "残り " + hiddenCount + " 件を表示";
+        var lessLabel = "表示を減らす";
+        var toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "more-toggle";
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-controls", foldedIds.join(" "));
+        toggle.textContent = moreLabel;
+        toggle.addEventListener("click", function () {
+          var expanded = section.classList.toggle("is-expanded");
+          toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+          toggle.textContent = expanded ? lessLabel : moreLabel;
+          applyFilters();
+        });
+        section.appendChild(toggle);
+      }
+
       return section;
     }
 
@@ -436,6 +545,44 @@
         chip.textContent = category.label;
         chipRow.appendChild(chip);
       });
+    }
+
+    function buildToc(categories, grouped) {
+      tocCard.innerHTML = "";
+      categories.forEach(function (category) {
+        var groupEntries = grouped.get(category.id);
+        if (!groupEntries) return;
+        var link = document.createElement("a");
+        link.className = "toc-link";
+        link.href = "#cat-" + category.id;
+        // "label" + "6" のように連結して読まれないよう、読み上げ名はaria-labelでまとめて指定する。
+        link.setAttribute("aria-label", category.label + "（" + groupEntries.length + "件）");
+        var labelText = document.createElement("span");
+        labelText.textContent = category.label;
+        link.appendChild(labelText);
+        var count = document.createElement("span");
+        count.className = "toc-count";
+        count.textContent = String(groupEntries.length);
+        count.setAttribute("aria-hidden", "true");
+        link.appendChild(count);
+        link.addEventListener("click", function (e) {
+          // 修飾キー付き・中クリックなどは新規タブで開く操作なので、ブラウザ標準の動作に任せる。
+          if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          var chip = Array.prototype.find.call(chipRow.querySelectorAll(".chip"), function (c) {
+            return c.dataset.category === category.id;
+          });
+          if (chip) chip.click();
+          var target = document.getElementById("cat-" + category.id);
+          if (target) target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+          // pushStateだけならブラウザ標準のハッシュジャンプ（即時・スムーズスクロールと二重に動く）は起きない。
+          if (window.history && window.history.pushState) {
+            window.history.pushState(null, "", "#cat-" + category.id);
+          }
+        });
+        tocCard.appendChild(link);
+      });
+      tocCard.classList.toggle("is-visible", totalEntries >= FOLD_TOTAL_THRESHOLD);
     }
 
     function clearMarks(el) {
@@ -467,11 +614,12 @@
 
     function applyFilters() {
       var query = searchInput.value.trim().toLowerCase();
-      var visibleCount = 0;
+      var matchCount = 0;
 
       groups.forEach(function (group) {
         var categoryMatches = activeCategory === "all" || group.dataset.category === activeCategory;
-        var groupHasVisible = false;
+        var groupHasMatch = false;
+        var expanded = group.classList.contains("is-expanded");
 
         group.querySelectorAll(".entry").forEach(function (entry) {
           var qEl = entry.querySelector(".q-text");
@@ -480,13 +628,18 @@
           clearMarks(aEl);
 
           var textMatches = !query || (entry.dataset.searchText || "").indexOf(query) !== -1;
-          var visible = categoryMatches && textMatches;
+          var matches = categoryMatches && textMatches;
+          // 検索中は折りたたみを無視して一致した項目をすべて出す。
+          var folded = !query && !expanded && entry.classList.contains("is-folded");
+          var domVisible = matches && !folded;
 
-          entry.classList.toggle("is-hidden", !visible);
+          entry.classList.toggle("is-hidden", !domVisible);
 
-          if (visible) {
-            groupHasVisible = true;
-            visibleCount++;
+          if (matches) {
+            groupHasMatch = true;
+            matchCount++;
+          }
+          if (domVisible) {
             if (query) {
               highlight(qEl, query);
               highlight(aEl, query);
@@ -497,11 +650,14 @@
           }
         });
 
-        group.classList.toggle("is-hidden", !groupHasVisible);
+        var toggle = group.querySelector(".more-toggle");
+        if (toggle) toggle.classList.toggle("is-hidden", !!query);
+
+        group.classList.toggle("is-hidden", !groupHasMatch);
       });
 
-      resultCount.textContent = query || activeCategory !== "all" ? "該当 " + visibleCount + " 件" : "全" + visibleCount + "件";
-      emptyState.classList.toggle("is-visible", visibleCount === 0 && totalEntries > 0);
+      resultCount.textContent = query || activeCategory !== "all" ? "該当 " + matchCount + " 件" : "全" + matchCount + "件";
+      emptyState.classList.toggle("is-visible", matchCount === 0 && totalEntries > 0);
     }
 
     function bindControls() {
@@ -523,6 +679,7 @@
       totalEntries = entries.length;
 
       buildChips(categories);
+      toolbar.classList.toggle("many-categories", categories.length >= MANY_CATEGORIES_THRESHOLD);
 
       // 1回のループでカテゴリごとにまとめ、組み立てた分をまとめて差し込む
       // （カテゴリごとにfilterすると走査がカテゴリ数×件数になり、挿入も回数分の再描画を招く）。
@@ -531,6 +688,8 @@
         if (!grouped.has(entry.category)) grouped.set(entry.category, []);
         grouped.get(entry.category).push(entry);
       });
+
+      buildToc(categories, grouped);
 
       var fragment = document.createDocumentFragment();
       categories.forEach(function (category) {
