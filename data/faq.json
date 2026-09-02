@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T00:00:00Z",
+  "updatedAt": "2026-08-18T23:41:55Z",
   "formsUrl": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DSqS4jtWTk2EDnAk9xOM7LUqRrvmN35Km5YAUpUGC5pUMkJRRkRTS00zS0pXWTIyTFc2QkJDSFpZUSQlQCN0PWcu",
   "categories": [
     {
@@ -36,6 +36,13 @@
       "question": "送った内容は必ずこのページに掲載されますか？",
       "answerHtml": "<p>いいえ。運営内で内容を確認し、他の方の参考になると判断したものだけを掲載しています。個別のご事情に関わる内容は掲載しない場合があります。</p>",
       "updatedAt": "2026-08-09T00:00:00Z"
+    },
+    {
+      "id": "3",
+      "category": "ask",
+      "question": "【テスト】FAQ公開確認",
+      "answerHtml": "<p>公開対象になったFAQは、GitHub Actionsを通して自動的に公開用データへ反映されます。</p>",
+      "updatedAt": "2026-08-18T23:41:55Z"
     },
     {
       "id": "c4",
