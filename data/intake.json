@@ -1,8 +1,16 @@
 {
-  "updatedAt": "",
+  "updatedAt": "2026-09-03T13:31:26Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
   },
-  "entries": []
+  "entries": [
+    {
+      "id": 5,
+      "category": "ask",
+      "question": "Miki Makino",
+      "answer": "回答します",
+      "updatedAt": "2026-09-03T13:31:26Z"
+    }
+  ]
 }
