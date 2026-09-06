@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-03T13:45:08Z",
+  "updatedAt": "2026-09-06T01:33:00Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
@@ -18,6 +18,13 @@
       "question": "坂上真弓",
       "answer": "回答テスト２です。違う人が回答した想定",
       "updatedAt": "2026-09-03T13:45:08Z"
+    },
+    {
+      "id": 8,
+      "category": "ask",
+      "question": "天気について質問",
+      "answer": "今日は晴れです",
+      "updatedAt": "2026-09-06T01:33:00Z"
     }
   ]
 }
