@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T10:33:48Z",
+  "updatedAt": "2026-09-14T10:35:06Z",
   "formsUrl": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DSqS4jtWTk2EDnAk9xOM7LUqRrvmN35Km5YAUpUGC5pUMkJRRkRTS00zS0pXWTIyTFc2QkJDSFpZUSQlQCN0PWcu",
   "categories": [
     {
@@ -52,13 +52,6 @@
       "updatedAt": "2026-09-06T01:33:00Z"
     },
     {
-      "id": "11",
-      "category": "ask",
-      "question": "9月14日の雨について",
-      "answerHtml": "<p>①あああ<br>②神戸はお昼に雨がふりましたよ<br>③線状降水帯だぁって職場で盛り上がってました☔</p>",
-      "updatedAt": "2026-09-14T10:33:48Z"
-    },
-    {
       "id": "c4",
       "category": "privacy",
       "question": "名前や連絡先はFAQに載りますか？",
@@ -71,6 +64,13 @@
       "question": "一度載った回答を取り下げてほしい場合はどうすればいいですか？",
       "answerHtml": "<p>フォームまたは直接のご連絡で取り下げのご希望をお伝えください。確認でき次第、該当項目を非公開にします。</p>",
       "updatedAt": "2026-08-09T00:00:00Z"
+    },
+    {
+      "id": "11",
+      "category": "privacy",
+      "question": "9月14日の雨について",
+      "answerHtml": "<p>①あああ<br>②神戸はお昼に雨がふりましたよ<br>③線状降水帯だぁって職場で盛り上がってました☔</p>",
+      "updatedAt": "2026-09-14T10:35:06Z"
     },
     {
       "id": "c6",
