@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-06T01:33:00Z",
+  "updatedAt": "2026-09-14T10:23:02Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
@@ -25,6 +25,13 @@
       "question": "天気について質問",
       "answer": "今日は晴れです",
       "updatedAt": "2026-09-06T01:33:00Z"
+    },
+    {
+      "id": 11,
+      "category": "ask",
+      "question": "9月14日の雨について",
+      "answer": "あああ",
+      "updatedAt": "2026-09-14T10:23:02Z"
     }
   ]
 }
