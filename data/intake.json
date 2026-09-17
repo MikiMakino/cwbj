@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T13:19:51Z",
+  "updatedAt": "2026-09-17T13:21:47Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
@@ -8,9 +8,9 @@
     {
       "id": 6,
       "category": "ask",
-      "question": "坂上真弓",
+      "question": "テストです（Sakagami）",
       "answer": "回答テスト２です。違う人が回答した想定",
-      "updatedAt": "2026-09-03T13:45:08Z"
+      "updatedAt": "2026-09-17T13:21:47Z"
     },
     {
       "id": 8,
