@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T13:21:47Z",
+  "updatedAt": "2026-09-17T13:37:32Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
@@ -11,6 +11,13 @@
       "question": "テストです（Sakagami）",
       "answer": "回答テスト２です。違う人が回答した想定",
       "updatedAt": "2026-09-17T13:21:47Z"
+    },
+    {
+      "id": 7,
+      "category": "ask",
+      "question": "Miki Makino",
+      "answer": "今日は晴れてます",
+      "updatedAt": "2026-09-17T13:37:32Z"
     },
     {
       "id": 8,
