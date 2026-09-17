@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T13:38:21Z",
+  "updatedAt": "2026-09-17T13:44:06Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
@@ -32,6 +32,13 @@
       "question": "9月14日の雨について",
       "answer": "①あああ\n②神戸はお昼に雨がふりましたよ\n③線状降水帯だぁって職場で盛り上がってました☔",
       "updatedAt": "2026-09-14T10:51:27Z"
+    },
+    {
+      "id": 13,
+      "category": "privacy",
+      "question": "板垣家停電について",
+      "answer": "私もよこから回答してみる。コンフリクトするかな\n\n停電びっくりしますね",
+      "updatedAt": "2026-09-17T13:44:06Z"
     }
   ]
 }
