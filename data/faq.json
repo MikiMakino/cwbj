@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T13:44:06Z",
+  "updatedAt": "2026-09-17T13:47:07Z",
   "formsUrl": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DSqS4jtWTk2EDnAk9xOM7LUqRrvmN35Km5YAUpUGC5pUMkJRRkRTS00zS0pXWTIyTFc2QkJDSFpZUSQlQCN0PWcu",
   "categories": [
     {
@@ -83,8 +83,8 @@
       "id": "13",
       "category": "privacy",
       "question": "板垣家停電について",
-      "answerHtml": "<p>私もよこから回答してみる。コンフリクトするかな</p><p>停電びっくりしますね</p>",
-      "updatedAt": "2026-09-17T13:44:06Z"
+      "answerHtml": "<p>私もよこから回答してみる。コンフリクトするかな<br>停電びっくりしますね(さか<br>雨のせいでしょうか。（まき</p>",
+      "updatedAt": "2026-09-17T13:47:07Z"
     },
     {
       "id": "c6",
