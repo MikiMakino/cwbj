@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T13:37:54Z",
+  "updatedAt": "2026-09-17T13:38:21Z",
   "source": {
     "repo": "MikiMakino/cwbjapan",
     "label": "公開"
@@ -16,8 +16,8 @@
       "id": 7,
       "category": "ask",
       "question": "Miki Makino",
-      "answer": "今日は晴れてます",
-      "updatedAt": "2026-09-17T13:37:54Z"
+      "answer": "テストです",
+      "updatedAt": "2026-09-17T13:38:21Z"
     },
     {
       "id": 8,
